@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>OL</title>
+<script src="https://openlayers.org/api/OpenLayers.js">
+</script>
+<style>
+#map {
+width:400px;
+height:400px;
+}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+// your JS code
+console.log("Hola, all!");
+alert("Hello JS World!");
+// my data is a label/ID for what we store, which is the object stored in variable d,
+// whose value is {"k1":[{"a":5, "b":-6}]}, which consists of a key called k1
+// with an array as its value: [{"a":5, "b":-6}]
+var d = {"k1":[{"a":5, "b":-6}]};
+localStorage.setItem("myData",JSON.stringify(d));
+// you'd need to modify the above, to store all your points
+//next [presumably after closing the browser, and reloading our html]
+// we can fetch the stored data, just by supplying its key:
+var dataStored = JSON.parse(localStorage.getItem("myData"));
+// verify that we fetched our data correctly
+console.log(dataStored);
+// we can iterate through our array [of points], like so:
+var a = dataStored.k1; // a will contain our array
+for(var indx in a) { // indx is 0,1,2...
+console.log(a[indx]); // this could be a single point
+}
+// here's how to plot points on a map, using OpenLayers:
+// [this is code I mildly modified, from an existing source]
+function initMap() {
+map = new OpenLayers.Map('map');
+basemap = new OpenLayers.Layer.OSM("Simple OSM Map");
+map.addLayer(basemap);
+markers = new OpenLayers.Layer.Markers("Markers");
+map.addLayer(markers);
+}// initMap()
+function addMarker(latitude, longitude) {
+var lonLat = new OpenLayers.LonLat(longitude, latitude)
+.transform(
+new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+map.getProjectionObject() // to Spherical Mercator Projection
+);
+var point = new OpenLayers.Marker(lonLat);
+markers.addMarker(point);
+map.setCenter(lonLat, 16); // second arg is zoom level
+//console.log(latitude + ", " + longitude);
+}// addMarker()
+// load and setup map layers
+initMap();
+// here's how to plot just ONE [lat,long] on the map!
+
+addMarker(34.019481014875694,-118.2887760676731);  // somewhere in SAL
+addMarker(34.02094021437333, -118.28747915547332);  // somewhere in Grace Ford Hall
+addMarker(34.020204677263386,-118.28530319578805);  // somewhere in Tommy Trojan
+addMarker(34.02019982181299,-118.2831957516816);  // somewhere in  Doheny
+
+addMarker(34.018697828791375,-118.28636764711992);  // somewhere in South Gate
+addMarker(34.01702738277228,-118.286148152824);  // somewhere in Exposition Park
+addMarker(34.018880543962105,-118.28230933978621);  // somewhere in Fertitta Cafe
+addMarker(34.0215179448401,-118.28301640318824);  // somewhere in Leavey
+
+addMarker(34.02302291198786,-118.28356703734494);  // somewhere in North Gate 1
+addMarker(34.02521897806949,-118.28508553523646);  // somewhere in USC Village
+addMarker(34.02496111660395,-118.28711517278332);  // somewhere in North Gate 2
+addMarker(34.023526657426025,-118.28648312218);  // somewhere in SCA Café
+
+addMarker(34.025389192306335,-118.28111638149088);  // somewhere in Home
+
+</script>
+</body>
+</html>
